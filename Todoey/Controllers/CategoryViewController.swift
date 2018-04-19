@@ -74,7 +74,6 @@ class CategoryViewController: UITableViewController {
     }
     
     //MARK: - Add New Categories
-    
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
         var textField = UITextField()
         
