@@ -11,13 +11,16 @@ import RealmSwift
 
 class CategoryViewController: UITableViewController {
     
+    //initialize new access point to Realm database
     let realm = try! Realm()
     
+    //change catagories from array of category items to collection of results
     var categoryArray : Results<Category>?
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        //load up all categories that exist
         loadCategories()
 
     }
@@ -34,6 +37,8 @@ class CategoryViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        //number of rows to equal number of categories
+        //if number of categories is nil, set number of rows to 1
         return categoryArray?.count ?? 1
     }
     
@@ -67,6 +72,7 @@ class CategoryViewController: UITableViewController {
     
     func loadCategories() {
         
+        //fetch all objects that belong to the category data type
         categoryArray = realm.objects(Category.self)
 
         tableView.reloadData()
