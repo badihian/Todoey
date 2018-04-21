@@ -24,11 +24,16 @@ class TodoListViewController: SwipeTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
         //        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
         
-        loadItems()
-        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        if let colorHex = selectedCategory?.backgroundColor{
+            
+            title = selectedCategory!.name
+            navigationController?.navigationBar.barTintColor = UIColor(hexString: colorHex)
+        }
     }
     
     //MARK: - Tableview Datasource Methods
