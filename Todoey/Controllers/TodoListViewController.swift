@@ -9,10 +9,10 @@
 import UIKit
 import RealmSwift
 
-class TodoListViewController: UITableViewController {
+class TodoListViewController: SwipeTableViewController {
     
-    var todoItems : Results<Item>?
     let realm = try! Realm()
+    var todoItems : Results<Item>?
     
     var selectedCategory : Category? {
         didSet{
@@ -24,16 +24,18 @@ class TodoListViewController: UITableViewController {
         super.viewDidLoad()
         
         
-        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
+        //        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
         
-        //        loadItems()
+        loadItems()
+        
+        tableView.rowHeight = 80.0
     }
     
     //MARK: - Tableview Datasource Methods
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
         if let item = todoItems?[indexPath.row] {
             
             cell.textLabel?.text = item.title
@@ -58,8 +60,8 @@ class TodoListViewController: UITableViewController {
         if let item = todoItems?[indexPath.row] {
             do {
                 try realm.write {
-//                    Delete items
-//                    realm.delete(item)
+                    //                    Delete items
+                    //                    realm.delete(item)
                     item.done = !item.done
                 }
             } catch {
@@ -114,9 +116,25 @@ class TodoListViewController: UITableViewController {
     // 'with' is used to simply be understood better in english, '= Item.fetchRequest()' sets the default value if nothing is passed
     func loadItems() {
         
+        //        categoryArray = realm.objects(Category.self)
         todoItems = selectedCategory?.items.sorted(byKeyPath: "title", ascending: true)
         
         tableView.reloadData()
+    }
+    
+    //MARK: - Delete Data From Swipe
+    
+    override func updateModel(at indexPath: IndexPath) {
+        if let item = self.todoItems?[indexPath.row] {
+            do {
+                try self.realm.write {
+                    //                        Delete items
+                    self.realm.delete(item)
+                }
+            } catch {
+                print("Error deleting category, \(error)")
+            }
+        }
     }
     
 }
@@ -124,19 +142,19 @@ class TodoListViewController: UITableViewController {
 //MARK: - Search Bar Methods
 // extends the view controller but separates it so it's more organized
 extension TodoListViewController: UISearchBarDelegate {
-
+    
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         
         todoItems = todoItems?.filter("title CONTAINS[cd] %@", searchBar.text!).sorted(byKeyPath: "timeStamp", ascending: true)
         
         tableView.reloadData()
-
+        
     }
-
+    
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchBar.text?.count == 0 {
             loadItems()
-
+            
             DispatchQueue.main.async {
                 searchBar.resignFirstResponder()
             }
