@@ -28,7 +28,6 @@ class TodoListViewController: SwipeTableViewController {
         
         loadItems()
         
-        tableView.rowHeight = 80.0
     }
     
     //MARK: - Tableview Datasource Methods
@@ -40,6 +39,7 @@ class TodoListViewController: SwipeTableViewController {
             
             cell.textLabel?.text = item.title
             cell.accessoryType = item.done ? .checkmark : .none
+            cell.backgroundColor = UIColor(hexString: item.backgroundColor)
         } else {
             cell.textLabel?.text = "No Items Added"
         }
@@ -90,6 +90,7 @@ class TodoListViewController: SwipeTableViewController {
                         let newItem = Item()
                         newItem.title = textField.text!
                         newItem.timeStamp = Date()
+                        newItem.backgroundColor = UIColor.randomFlat.hexValue()
                         currentCategory.items.append(newItem)
                     }
                 } catch {
