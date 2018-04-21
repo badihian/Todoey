@@ -14,6 +14,7 @@ class TodoListViewController: SwipeTableViewController {
     
     let realm = try! Realm()
     var todoItems : Results<Item>?
+    @IBOutlet weak var searchBar: UISearchBar!
     
     var selectedCategory : Category? {
         didSet{
@@ -33,6 +34,8 @@ class TodoListViewController: SwipeTableViewController {
             
             title = selectedCategory!.name
             navigationController?.navigationBar.barTintColor = UIColor(hexString: colorHex)
+            
+            searchBar.barTintColor = UIColor(hexString: colorHex)
         }
     }
     
